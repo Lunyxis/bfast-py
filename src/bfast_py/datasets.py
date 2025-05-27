@@ -14,8 +14,9 @@ def r_style_interval(from_tuple, end_tuple, frequency):
     return real_range
 
 
-
-data_folder =  Path(__file__).parent.parent.parent / 'data'
+data_folder = Path(__file__).parent / 'data'  # Package mode
+if not data_folder.exists():
+    data_folder =  Path(__file__).parent.parent.parent / 'data'  # Development mode
 
 
 """
