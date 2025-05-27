@@ -75,6 +75,10 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ### Installing dependencies
 
 ```bash
+# Development dependencies
+uv pip install -e .[dev]
+
+# Classic dependencies
 uv pip install -e .
 ```
 

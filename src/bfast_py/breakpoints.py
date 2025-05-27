@@ -1,16 +1,15 @@
 import numpy as np
+
 np.set_printoptions(precision=2, linewidth=120)
 
-import matplotlib.pyplot as plt
 import pandas as pd
 
-import datasets
-from utils import LoggingBase
-from ssr_triang import ssr_triang
+from bfast_py.ssr_triang import ssr_triang
+from bfast_py.utils import LoggingBase
 
 
 class Breakpoints(LoggingBase):
-    def __init__(self, X, y, h=0.15, max_breaks=None, use_mp=False, verbosity=0):
+    def __init__(self, X, y, h=0.15, breaks=None, max_breaks=None, use_mp=False, verbosity=0):
         """
         Computation of optimal breakpoints in regression relationships.
 
@@ -41,8 +40,7 @@ class Breakpoints(LoggingBase):
         if max_breaks is None:
             max_breaks = max_allowed_breaks
         elif max_breaks > max_allowed_breaks:
-            self.logger.warning("requested number of breaks = {} too large, changed to {}".
-                            format(breaks, max_breaks))
+            self.logger.warning("requested number of breaks = {} too large, changed to {}".format(breaks, max_breaks))
             max_breaks = max_allowed_breaks
         self.max_breaks = max_breaks
 
@@ -100,7 +98,7 @@ class Breakpoints(LoggingBase):
         n = self.nobs
 
         if (breaks * 2) > ncol:
-            v1 = int(ncol/2) + 1
+            v1 = int(ncol / 2) + 1
             v2 = breaks
 
             if v1 < v2:
@@ -120,10 +118,9 @@ class Breakpoints(LoggingBase):
                     # map
                     break_SSR = np.vectorize(fun)(pot_index)
                     opt = np.nanargmin(break_SSR)
-                    my_SSR_table[i - h + 1, np.array((2, 3))] = \
-                        np.array((pot_index[opt], break_SSR[opt]))
+                    my_SSR_table[i - h + 1, np.array((2, 3))] = np.array((pot_index[opt], break_SSR[opt]))
 
-                SSR_table = np.column_stack((SSR_table, my_SSR_table[:, np.array((2,3))]))
+                SSR_table = np.column_stack((SSR_table, my_SSR_table[:, np.array((2, 3))]))
         return SSR_table
 
     def extract_breaks(self, SSR_table, breaks):
@@ -138,8 +135,7 @@ class Breakpoints(LoggingBase):
             raise ValueError("compute SSR_table with enough breaks before")
 
         index = SSR_table[:, 0].astype(int)
-        fun = lambda i: SSR_table[int(i - self.h + 1), int(breaks * 2 - 1)] \
-            + self.SSR(i + 1, n - 1)
+        fun = lambda i: SSR_table[int(i - self.h + 1), int(breaks * 2 - 1)] + self.SSR(i + 1, n - 1)
         # parallel map
         break_SSR = np.vectorize(fun)(index)
         opt = np.zeros(breaks, dtype=int)
@@ -159,7 +155,7 @@ class Breakpoints(LoggingBase):
         else:
             breakpoints = self.extract_breaks(self.SSR_table, m)
             # map reduce
-            bp = np.concatenate(([0], breakpoints, [self.nobs-1]))
+            bp = np.concatenate(([0], breakpoints, [self.nobs - 1]))
             cb = np.column_stack((bp[:-1] + 1, bp[1:]))
             fun = lambda x: self.SSR(x[0], x[1])
             SSR = np.sum([fun(i) for i in cb])
@@ -174,8 +170,7 @@ class Breakpoints(LoggingBase):
         if np.isclose(SSR[0], 0.0):
             BIC_val = -np.inf
         else:
-            BIC_val = n * (np.log(SSR[0]) + 1 - np.log(n) + np.log(2 * np.pi)) \
-                + np.log(n) * (self.nreg + 1)
+            BIC_val = n * (np.log(SSR[0]) + 1 - np.log(n) + np.log(2 * np.pi)) + np.log(n) * (self.nreg + 1)
         BIC = np.concatenate(([BIC_val], np.repeat(np.nan, self.max_breaks)))
         SSR1, breakpoints = self.breakpoints_for_m(self.max_breaks)
         SSR[self.max_breaks] = SSR1
@@ -223,7 +218,7 @@ if __name__ == "__main__":
     # Synthetic dataset with two breakpoints x = 15 and 35
     n = 50
     ones = np.ones(n).reshape((n, 1)).astype("float64")
-    y = np.arange(1, n+1).astype("float64")
+    y = np.arange(1, n + 1).astype("float64")
     X = np.copy(y).reshape((n, 1))
     # X = np.column_stack((ones, X))
     # X = ones
@@ -231,7 +226,6 @@ if __name__ == "__main__":
     y[14:] = y[14:] * 0.03
     y[5] = np.nan
     y[34:] = y[34:] + 10
-
 
     bp = Breakpoints(X, y, use_mp=False, verbosity=0).breakpoints
     print("Breakpoints:", bp)

@@ -22,5 +22,10 @@ dependencies = [
     "statsmodels"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "matplotlib"
+]
+
 [tool.hatch.build.targets.wheel]
-packages = ["src/bfast"]
+packages = ["src/bfast_py/"]

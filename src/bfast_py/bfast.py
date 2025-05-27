@@ -1,10 +1,11 @@
 import numpy as np
 import statsmodels.api as sm
-import utils
-from breakpoints import Breakpoints
-from datasets import *
-from efp import EFP
-from stl import STL
+
+from bfast_py import utils
+from bfast_py.breakpoints import Breakpoints
+from bfast_py.datasets import harvest, harvest_dates, harvest_freq
+from bfast_py.efp import EFP
+from bfast_py.stl import STL
 
 
 class BFASTResult:
@@ -241,10 +242,10 @@ class BFAST(utils.LoggingBase):
 def run_test(y, x, f, season, level=0.05, h=0.15, max_iter=10, verbosity=0):
     v = BFAST(y, x, f, season=season, level=level, h=h, max_iter=max_iter, verbosity=verbosity)
     Vt_bp = v.output.trend_breakpoints
-    Vt_dates = x[Vt_bp] if (Vt_bp is not None) else None
+    # Vt_dates = x[Vt_bp] if (Vt_bp is not None) else None
 
-    Wt_bp = v.output.season_breakpoints
-    Wt_dates = x[Wt_bp] if (Wt_bp is not None) else None
+    # Wt_bp = v.output.season_breakpoints
+    # Wt_dates = x[Wt_bp] if (Wt_bp is not None) else None
 
     # print("n_iters", v.n_iter)
     print("Trend breakpoints", Vt_bp)
@@ -254,6 +255,7 @@ def run_test(y, x, f, season, level=0.05, h=0.15, max_iter=10, verbosity=0):
 
 
 if __name__ == "__main__":
+
     # logging_setup()
     # run_test(nile, nile_dates, None, "none")
     # run_test(simts_sum, simts_dates, simts_freq, "harmonic", level=0.35, h=0.3, max_iter=2)

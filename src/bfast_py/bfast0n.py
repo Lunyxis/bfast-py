@@ -1,16 +1,18 @@
 import numpy as np
 
-import datasets
-from breakpoints import Breakpoints
-from utils import omit_nans, LoggingBase
+import bfast_py.datasets
+from bfast_py.breakpoints import Breakpoints
+from bfast_py.utils import LoggingBase, omit_nans
 
 
 class BFAST0n(LoggingBase):
     """
     Light-weight detection of multiple breaks in a time series
     """
+
     def __init__(self, X, y, frequency, stl="none", period=None, order=3, use_mp=True, verbosity=0):
         super().__init__(verbosity)
+
         def stl_adjust(x):
             seasonal, trend, _ = stl(x, periodic=True).time_series
             if stl == "trend":
@@ -60,9 +62,9 @@ class BFAST0n(LoggingBase):
 
 
 if __name__ == "__main__":
-    y = datasets.ndvi
-    x = datasets.ndvi_dates
-    freq = datasets.ndvi_freq
+    y = bfast_py.datasets.ndvi
+    x = bfast_py.datasets.ndvi_dates
+    freq = bfast_py.datasets.ndvi_freq
 
     print("Running bfast0n on NDVI")
     bf = BFAST0n(x, y, freq, "none", verbosity=1)
