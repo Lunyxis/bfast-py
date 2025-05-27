@@ -3,7 +3,7 @@ from functools import partial
 
 import numpy as np
 
-from recresid import recresid
+from bfast_py.recresid import recresid
 
 
 def ssr_triang(n, h, X, y, k, intercept_only, use_mp=False):

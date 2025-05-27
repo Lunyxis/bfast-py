@@ -52,15 +52,9 @@ uv pip install git+https://github.com/Lunyxis/bfast-py.git
 TODO : update example usage, test, etc.
 
 ```python
-import bfast
+import bfast_py
 
-# Say hello
-print(bfast.core.hello())
-
-# Process some data
-data = [1, 2, 3]
-processed_data = bfast.core.process_data(data)
-print(processed_data)
+# Update with examples
 ```
 
 ## Development

@@ -1,12 +1,11 @@
 import numpy as np
-import matplotlib.pyplot as plt
-
-import statsmodels.tsa.seasonal as sm
-import datasets
 import pandas as pd
+import statsmodels.tsa.seasonal as sm
+
+import bfast_py.datasets as datasets
 
 
-class STL():
+class STL:
     def __init__(self, y, period, periodic=True):
         y = np.array(pd.DataFrame(y).interpolate().values.ravel().tolist())
         # stl = sm.STL(y, period=period)
@@ -46,4 +45,3 @@ if __name__ == "__main__":
 
     St = STL(Yt, f, periodic=True)
     print(St.seasonal[99:150])
-

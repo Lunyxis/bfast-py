@@ -1,11 +1,10 @@
 import numpy as np
-
-np.set_printoptions(precision=2, linewidth=120)
-
 import pandas as pd
 
 from bfast_py.ssr_triang import ssr_triang
 from bfast_py.utils import LoggingBase
+
+np.set_printoptions(precision=2, linewidth=120)
 
 
 class Breakpoints(LoggingBase):
@@ -264,4 +263,6 @@ if __name__ == "__main__":
     # bp_uk = Breakpoints(X, y, breaks=uk_breaks).breakpoints
     # uk_break_dates = uk_driver_deaths_dates[bp_uk]
     # if uk_break_dates.shape[0] > 0:
+    #     print("Breakpoints", uk_break_dates)
+    #     print("Breakpoints", uk_break_dates)
     #     print("Breakpoints", uk_break_dates)

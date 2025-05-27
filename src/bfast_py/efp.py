@@ -1,9 +1,8 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
-import datasets
-import utils
+import bfast_py.datasets as datasets
+import bfast_py.utils as utils
 
 
 class EFP(utils.LoggingBase):
@@ -45,7 +44,7 @@ class EFP(utils.LoggingBase):
 
         process = np.cumsum(e_zero)
         self.logger.debug("process1:\n{}".format(process))
-        process = process[int(nh):] - process[:(n - int(nh) + 1)]
+        process = process[int(nh) :] - process[: (n - int(nh) + 1)]
         self.logger.debug("process2:\n{}".format(process))
         process = process / (sigma * np.sqrt(n))
         self.logger.debug("process3:\n{}".format(process))
@@ -68,7 +67,7 @@ class EFP(utils.LoggingBase):
 
         k = min(k, max_k)
 
-        crit_table = utils.sc_me[((k - 1) * table_dim):(k * table_dim),:]
+        crit_table = utils.sc_me[((k - 1) * table_dim) : (k * table_dim), :]
         tablen = crit_table.shape[1]
         tableh = np.arange(1, table_dim + 1) * 0.05
         tablep = np.array((0.1, 0.05, 0.025, 0.01))
@@ -83,7 +82,7 @@ class EFP(utils.LoggingBase):
 
         p = np.interp(x, tableipl, tablep)
 
-        return(p)
+        return p
 
     def sctest(self, functional="max"):
         """
@@ -111,7 +110,7 @@ class EFP(utils.LoggingBase):
         p_value = self.p_value(stat, h, k)
         self.logger.debug("p_value: {}".format(stat))
 
-        return(stat, p_value)
+        return (stat, p_value)
 
 
 def test_dataset(y, name, h=0.15, level=0.15):
@@ -134,5 +133,3 @@ def test_dataset(y, name, h=0.15, level=0.15):
 if __name__ == "__main__":
     # test_dataset(datasets.nhtemp, "nhtemp")
     test_dataset(datasets.nile, "nile")
-
-
