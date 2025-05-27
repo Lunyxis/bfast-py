@@ -29,3 +29,4 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/bfast_py/"]
+include = ["src/bfast_py/data/**/*"]
