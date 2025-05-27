@@ -1,14 +1,13 @@
 import numpy as np
 import statsmodels.api as sm
-
 import utils
-from datasets import *
-from stl import STL
-from efp import EFP
 from breakpoints import Breakpoints
+from datasets import *
+from efp import EFP
+from stl import STL
 
 
-class BFASTResult():
+class BFASTResult:
     def __init__(self, Tt, St, Nt, Vt_bp, Wt_bp):
         self.trend = Tt
         self.season = St
@@ -23,11 +22,13 @@ class BFASTResult():
             self.season_breakpoints = Wt_bp
 
     def __str__(self):
-        st = "Trend:\n{}\n\n".format(self.trend) +\
-            "Season:\n{}\n\n".format(self.season) +\
-            "Remainder:\n{}\n\n".format(self.remainder) +\
-            "Trend Breakpoints:\n{}\n\n".format(self.trend_breakpoints) +\
-            "Season Breakpoints:\n{}\n".format(self.season_breakpoints)
+        st = (
+            "Trend:\n{}\n\n".format(self.trend)
+            + "Season:\n{}\n\n".format(self.season)
+            + "Remainder:\n{}\n\n".format(self.remainder)
+            + "Trend Breakpoints:\n{}\n\n".format(self.trend_breakpoints)
+            + "Season Breakpoints:\n{}\n".format(self.season_breakpoints)
+        )
         return st
 
 
@@ -39,25 +40,29 @@ class BFAST(utils.LoggingBase):
     components with significant break detection in the decomposed
     components of the time series.
     """
-    def __init__(self,
-                 Yt,
-                 ti,
-                 frequency,
-                 h=0.15,
-                 season="dummy",
-                 max_iter=10,
-                 max_breaks=None,
-                 level=0.05,
-                 use_mp=True,
-                 verbosity=0):
+
+    def __init__(
+        self,
+        Yt,
+        ti,
+        frequency,
+        h=0.15,
+        season="dummy",
+        max_iter=10,
+        max_breaks=None,
+        level=0.05,
+        use_mp=True,
+        verbosity=0,
+    ):
         super().__init__(verbosity)
         nrow = Yt.shape[0]
         Tt = None
         f = frequency
+        ti = ti.squeeze()
 
         if season == "harmonic":
             self.logger.info("'harmonic' season is chosen")
-            w = 1/f
+            w = 1 / f
             tl = np.arange(1, Yt.shape[0] + 1)
             co = np.cos(2 * np.pi * tl * w)
             si = np.sin(2 * np.pi * tl * w)
@@ -194,7 +199,7 @@ class BFAST(utils.LoggingBase):
             i += 1
             output = BFASTResult(Tt, St, Nt, Vt_bp, Wt_bp)
 
-        if not nobp_Vt: # probably only works well for dummy model!
+        if not nobp_Vt:  # probably only works well for dummy model!
             self.logger.info("Calculating breakpoint magnitude")
             Vt_nrbp = Vt_bp.shape[0] if Vt_bp is not None else 0
             co = fm1.params  # final fitted trend model
